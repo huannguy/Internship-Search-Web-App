@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <h3>Internship Postings</h3>
+
+    <!-- Button to navigate back to the default landing page -->
+    <a href="{{ url_for('index') }}">
+        <button style="border-radius: 25px;">
+            Go to Homepage
+        </button>
+    </a><br>
+
+    <!-- Button to navigate back to the search page --> 
+    <a href="{{ url_for('search') }}">  
+        <button style="border-radius: 25px;">
+            Search Again
+        </button>
+    </a><br>
+
+    <!--Button to navigate to the bookmarked internships page.-->
+    <a href="{{ url_for('manage') }}"> 
+        <button style="border-radius: 25px;">
+            Manage Bookmarked Internships
+        </button>
+    </a><br><br>
+
+    <body>
+        <div class="background-image"></div>
+    </body>
+        
+    <!-- Displays all fetched internships from the API-->
+    {% for entry in entries %}
+    <div class=entry>
+        <div style="display: flex; gap: 0.25em;">
+            <span><strong>Title:</strong></span> <span>{{ entry.title }}</span><br>
+        </div>
+
+        <span><strong>Organization:</strong></span> <span> {{ entry.organization }}</span><br>
+        <span><strong>Date Posted:</strong></span> <span>{{ entry.date_posted }}</span><br>
+
+        <div style="display: flex; gap: 0.25em;"> 
+            <span><strong>Location:</strong></span> <span>{{ entry.locations_derived }}</span><br>
+        </div>
+
+        <!-- Displays the internship URL as a clickable link that opens in a new tab -->
+        <div style="display: flex; gap: 0.25em;">
+            <span><strong>URL:</strong></span> 
+            <span><a href="{{ entry.url }}" target="_blank">{{ entry.url }}</a></span><br>
+        </div>
+        
+        <form style="margin: 0;" action="{{ url_for('display') }}" method=post>
+            <!-- Store internship details as hidden inputs to send via POST request -->
+            <input type="hidden" name="internship_title" value="{{ entry.title }}">
+            <input type="hidden" name="organization" value="{{ entry.organization }}">
+            <input type="hidden" name="date_posted" value="{{ entry.date_posted }}">
+            <input type="hidden" name="location" value="{{ entry.locations_derived }}">
+            <input type="hidden" name="internship_url" value="{{ entry.url }}">
+
+            <!-- Submit button to bookmark the internship -->
+            <input style="border-radius: 15px;" type ="submit" value="Bookmark">
+        </form>
+
+        <!-- Display a message if the user attempts to bookmark the same internship posting more than once. -->
+         {% with messages = get_flashed_messages()%}
+         {% if messages%}
+            {% for message in messages %} 
+                <!-- Check if the message is related to the current entry being rendered --> 
+                {% if message.url == entry.url %}
+                    <!-- Displays a the message directly below the matching internship posting -->
+                    <p style="font-weight: bold; color: crimson; margin: 0;"> {{ message.message }}</p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+    </div>
+
+    {% endfor %} 
+
+{% endblock %}
