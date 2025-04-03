@@ -1,0 +1,119 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <h3>Bookmarked Internships</h3>
+
+    <!-- Button to navigate back to the default landing page. -->
+    <a href="{{ url_for('index') }}"> 
+        <button style="border-radius: 25px; ">
+            Go to Homepage
+        </button>
+    </a><br>
+    
+    <!-- Button to navigate to the search page. -->
+    <a href="{{ url_for('search') }}"> 
+        <button style="border-radius: 25px; ">
+            Search for More Internship Postings
+        </button>
+    </a><br>
+
+    <!-- Button to navigate to the sign page.-->
+    <a href="{{ url_for('manual-add') }}"> 
+        <button style="border-radius: 25px;">
+            Add New Entry Manually
+        </button>
+    </a><br><br>
+
+    <body>
+        <div class="background-image"></div>
+    </body>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" 
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Displays all bookmarked internships in the database.-->
+    {% for entry in entries %}
+    <div class=entry>
+        <div style="display: flex; gap: 0.25em;">
+            <span><strong>Title:</strong></span> <span>{{ entry.internship_title }}</span><br>
+        </div>
+
+        <span><strong>Organization:</strong></span> <span>{{ entry.organization }}</span><br>
+        <span><strong>Date Posted:</strong></span> <span>{{ entry.date_posted }}</span><br>
+
+        <div style="display: flex; gap: 0.25em;"> 
+            <span><strong>Location:</strong></span> <span>{{ entry.location }}</span><br>
+        </div>
+
+        <div style="display: flex; gap: 0.25em;"> 
+            <span><strong>URL:</strong></span> 
+            <span><a href="{{ entry.internship_url }}" target="_blank">{{ entry.internship_url }}</a></span><br>            
+        </div>
+
+        <span><strong>Date Applied:</strong></span> <span>{{ entry.date_applied or 'Not Applied Yet'}}</span><br>
+        <span><strong>Status:</strong></span> <span>{{ entry.application_status or 'Not Applied Yet'}}</span><br>
+
+        <div style="display: flex;">
+            <!-- Button for deleting an internship entry. -->
+            <form style="margin-left: 0; margin-right: 25px; width: 0;" action="{{ url_for('manage') }}" method=post>
+
+                <!-- Records the operation being performed. -->
+                <input type="hidden" name="operation" value="delete">
+                <input type="hidden" name="internship_url" value="{{ entry.internship_url }}">
+                <button style="padding: 4px;">
+                    <i class="fa-solid fa-trash"></i>
+                </button> 
+            </form> 
+
+            <!-- Button to toggle the visibility of the update form -->            
+            <form style="margin-left: 0; margin-right: 25px; width: 0;">
+                <button type="button" style="padding: 4px" onclick="toggle('{{ entry.internship_url }}')">
+                    <i class="fa-solid fa-pencil"></i>
+                </button>
+            </form>
+        </div> 
+
+        <!-- Hidden form for updating the "Date Applied" and "Application Status" fields for an internship posting -->
+        <form id="{{ entry.internship_url }}" action="{{ url_for('manage') }}" method=post style="display: none; ">
+            
+            <!-- Records the operation being performed. -->
+            <input type="hidden" name="operation" value="update">
+            <input type="hidden" name="internship_url" value="{{ entry.internship_url }}">
+
+            <!-- Input field for changing the 'Date Applied' attribute. -->
+            <p style="margin: 0;" class="heading">Set Date Applied: <input type=date name=date_applied></p>
+
+            <!-- Dropdown menu for changing the 'Application Status' attribute. -->
+            <label style="font-weight: bold;" for="application-status">Change Application Status:</label>
+            <select name="new_status" id="application-status">
+                <option value="Not Yet Applied">Not Yet Applied</option>
+                <option value="Accepted">Accepted</option>
+                <option value="Pending">Pending</option>
+                <option value="Rejected">Rejected</option>
+            </select>
+
+	        <p><input style="margin: 0;" type=submit value="Submit Changes"></p>
+        </form>
+    </div> 
+    {% endfor %}
+
+    <script>
+    /* JavaScript function to toggle the visibility of the update form */ 
+    function toggle(id) {
+        var hiddenField = document.getElementById(id); //Find the form based on its ID.
+
+        //Show the form if it is hidden.
+        if (hiddenField.style.display === "none") {
+            hiddenField.style.display = "block";
+        } 
+                
+        else {
+            hiddenField.style.display = "none";
+        }
+    }
+    </script>
+
+{% endblock %}
+
+
