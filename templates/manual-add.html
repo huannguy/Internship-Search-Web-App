@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Add New Entry</h2>
+
+    <!--Route back to the default landing page.-->
+    <a href="{{ url_for('index') }}">
+        <button style="border-radius: 25px;">
+            Go to Homepage
+        </button>
+    </a><br>
+
+    <body>
+        <div class="background-image"></div>
+    </body>
+
+	<!--Prompts the user to enter a value for each internship attribute-->
+    <form action="{{ url_for('manual-add') }}" method=post>
+	    <p class="heading">Internship Title: <input type=text name=internship_title required></p>
+	    <p class="heading">Organization: <input type=text name=organization required></p>
+	    <p class="heading">Date Posted: <input type=date name=date_posted required></p>
+	    <p class="heading">Location: <input type=text name=location required></p>
+        <p class="heading">Internship Url: <input type=url name=internship_url required></p>
+	    <p><input style="border-radius: 25px;" type=submit value=Add></p>
+    </form>
+
+    <!-- Display a flashed messages telling the user there already exists a bookmarked internship
+         entry with the same url as the one they are attempting to add.
+      -->
+    {% with messages = get_flashed_messages()%}
+    {% if messages%}
+        {% for message in messages %}
+            <p style="font-weight: bold; color: crimson;"> {{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+{% endblock %}
+
+
