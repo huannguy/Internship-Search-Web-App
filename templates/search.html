@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h3>Search for Internship Postings</h3>
+
+    <!-- Button to navigate back to the default landing page -->
+    <a href="{{ url_for('index') }}"> 
+        <button style="border-radius: 25px">
+            Go to Homepage
+        </button>
+    </a><br>
+
+    <!-- Form to filter internship postings based on user input -->
+    <form action="{{ url_for('search') }}" method=post>
+	    <p class="heading">Internship Title: <input type=text name=title_filter></p>
+	    <p class="heading">Organization: <input type=text name=organization_filter></p>
+	    <p class="heading">Location: <input type=text name=location_filter></p>
+
+	    <p><input style="border-radius: 25px ;" type="submit" value=Search></p>
+    </form>
+
+    <body>
+        <div class="background-image"></div>
+    </body>
+
+{% endblock %}
